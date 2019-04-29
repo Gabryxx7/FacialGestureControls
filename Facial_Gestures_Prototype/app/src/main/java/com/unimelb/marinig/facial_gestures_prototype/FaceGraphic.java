@@ -98,11 +98,11 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         // Draws a circle at the position of the detected face, with the face's track id below.
         float x = translateX(face.getPosition().x + face.getWidth() / 2);
         float y = translateY(face.getPosition().y + face.getHeight() / 2);
-        //canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
-        //canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
-       // canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
-        //canvas.drawText("Right: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x - ID_X_OFFSET * 3, y + ID_Y_OFFSET * 2, mIdPaint);
-        //canvas.drawText("Left: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x + ID_X_OFFSET * 5, y + ID_Y_OFFSET * 2, mIdPaint);
+        canvas.drawCircle(x, y, FACE_POSITION_RADIUS, mFacePositionPaint);
+        canvas.drawText("id: " + mFaceId, x + ID_X_OFFSET, y + ID_Y_OFFSET, mIdPaint);
+        canvas.drawText("happiness: " + String.format("%.2f", face.getIsSmilingProbability()), x - ID_X_OFFSET, y - ID_Y_OFFSET, mIdPaint);
+        canvas.drawText("Right: " + String.format("%.2f", face.getIsRightEyeOpenProbability()), x - ID_X_OFFSET * 3, y + ID_Y_OFFSET * 2, mIdPaint);
+        canvas.drawText("Left: " + String.format("%.2f", face.getIsLeftEyeOpenProbability()), x + ID_X_OFFSET * 5, y + ID_Y_OFFSET * 2, mIdPaint);
 
         // Draws a bounding box around the face.
         float xOffset = scaleX(face.getWidth() / 2.0f);
@@ -112,5 +112,7 @@ class FaceGraphic extends GraphicOverlay.Graphic {
         float right = x + xOffset;
         float bottom = y + yOffset;
         canvas.drawRect(left, top, right, bottom, mBoxPaint);
+
+        face.getLandmarks().forEach(landmark -> canvas.drawCircle(x+landmark.getPosition().x-ID_X_OFFSET, y+landmark.getPosition().y-ID_Y_OFFSET, FACE_POSITION_RADIUS, mFacePositionPaint));
     }
 }

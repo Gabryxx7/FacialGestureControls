@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //smileUnlock();
-        //winkUnlock();
-        shakeUnlock();
+        winkUnlock();
+        //shakeUnlock();
     }
 
     public void shakeUnlock(){
@@ -403,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
 
         Context context = getApplicationContext();
         FaceDetector detector = new FaceDetector.Builder(context)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+                .setClassificationType(FaceDetector.ACCURATE_MODE)
                 .build();
 
         detector.setProcessor(
