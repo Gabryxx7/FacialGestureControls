@@ -33,10 +33,13 @@ namespace HelloAffectiva
                 Affdex.Face face = pair.Value;
                 if(face!=null)
                 {
-                    foreach(PropertyInfo prop in typeof(Affdex.Emotions).GetProperties())
+                    foreach(PropertyInfo prop in typeof(Affdex.Emojis).GetProperties())
                     {
-                        float Value = (float)prop.GetValue(face.Emotions, null);
-                        string output = string.Format("{0}: {1:0.00}", prop.Name, Value);
+                        string output=face.Emojis.dominantEmoji.ToString();
+                        //Affdex.Emojis emoji = (Affdex.Emojis)prop.GetValue(face.Emojis.dominantEmoji);
+                        //string output = emoji.ToString();
+                        //float Value = (float)prop.GetValue(face.Emotions, null);
+                        //string output = string.Format("{0}: {1:0.00}", prop.Name, Value);
                         System.Console.WriteLine(output);
                     }
                 }
