@@ -11,10 +11,12 @@ namespace HelloAffectiva
         static void Main(string[] args)
         {
             //Hello from Gabry's laptop!
-            Affdex.Detector detector = new Affdex.CameraDetector(0,30,30,3,Affdex.FaceDetectorMode.LARGE_FACES);
+            Affdex.CameraDetector detector = new Affdex.CameraDetector(0,30,30,3,Affdex.FaceDetectorMode.LARGE_FACES);
             Form1 feed = new Form1(detector); 
             detector.setClassifierPath("C:\\Program Files\\Affectiva\\AffdexSDK\\data");
+            //detector.setImageListener(this);
             detector.setDetectAllEmotions(true);
+            detector.setDetectAllEmojis(true);
             detector.setDetectBrowRaise(true);
             detector.setDetectSmile(true);
             detector.setDetectGender(true);
