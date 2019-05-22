@@ -1,0 +1,10 @@
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Debug\HelloAffectiva.exe.config
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Debug\HelloAffectiva.exe
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Debug\HelloAffectiva.pdb
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Debug\Affdex.dll
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\obj\x64\Debug\HelloAffectiva.exe
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\obj\x64\Debug\HelloAffectiva.pdb
+C:\Users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Debug\Program.cs
+C:\Users\ebabaei\Documents\GitHub\FacialGesturesRecognition\WindowsAffectiva\HelloAffectiva\bin\x64\Debug\HelloAffectiva.exe.config
+C:\Users\ebabaei\Documents\GitHub\FacialGesturesRecognition\WindowsAffectiva\HelloAffectiva\obj\x64\Debug\HelloAffectiva.exe
+C:\Users\ebabaei\Documents\GitHub\FacialGesturesRecognition\WindowsAffectiva\HelloAffectiva\obj\x64\Debug\HelloAffectiva.pdb

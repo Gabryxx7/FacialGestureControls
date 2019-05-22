@@ -1,0 +1,8 @@
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Release\HelloAffectiva.exe.config
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Release\HelloAffectiva.exe
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Release\HelloAffectiva.pdb
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Release\Affdex.dll
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\obj\x64\Release\HelloAffectiva.csprojResolveAssemblyReference.cache
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\obj\x64\Release\HelloAffectiva.exe
+c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\obj\x64\Release\HelloAffectiva.pdb
+C:\Users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\x64\Release\Program.cs
