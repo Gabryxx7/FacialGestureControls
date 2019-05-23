@@ -37,22 +37,51 @@ namespace HelloAffectiva{
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
 
             //I tried to create this DIctionary of string values and functions so that we can associate a function for each emotions/expressopn/emoji
-            Func<double, bool> callback = (value) =>
+            Func<double, bool> smileIncreaseVol = (value) =>
             {
                 if (value > 50)
                 {
                     System.Console.WriteLine("TESING3");
                     //HookActions.hideAllWindows();
-                    HookActions.SendMessageW(base.Handle, WmCommand.WM_APPCOMMAND, base.Handle, (IntPtr) AppCommand.APPCOMMAND_VOLUME_UP);//this.Handle represents the system handle
+                    HookActions.SendMessageW(base.Handle, WmCommand.WM_APPCOMMAND, base.Handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);//this.Handle represents the system handle
                     return true;
                 }
 
                 return false;
             };
-            AffectivaAction newAction = new AffectivaAction(50, callback);
+            AffectivaAction smileAction = new AffectivaAction(50, smileIncreaseVol);
+
+            Func<double, bool> sadDecreaseVol = (value) =>
+            {
+                if (value > 50)
+                {
+                    System.Console.WriteLine("TESING3");
+                    //HookActions.hideAllWindows();
+                    HookActions.SendMessageW(base.Handle, WmCommand.WM_APPCOMMAND, base.Handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);//this.Handle represents the system handle
+                    return true;
+                }
+
+                return false;
+            };
+            AffectivaAction sadAction = new AffectivaAction(50, sadDecreaseVol);
+
+            Func<double, bool> eyesClosedHideWIndows = (value) =>
+            {
+                if (value > 50)
+                {
+                    System.Console.WriteLine("EYES CLOSED");
+                    HookActions.hideAllWindows();
+                    return true;
+                }
+
+                return false;
+            };
+            AffectivaAction eyesCLosedAction = new AffectivaAction(50, eyesClosedHideWIndows);
 
             label1.Text = Affdex.Emoji.Smiley.ToString().ToLower();
-            actions.Add(Affdex.Emoji.Smiley.ToString().ToLower(), newAction);
+            actions.Add(Affdex.Emoji.Smiley.ToString().ToLower(), smileAction);
+            actions.Add(Affdex.Emoji.Disappointed.ToString().ToLower(), sadAction);
+            actions.Add("eyeclosure", eyesCLosedAction);
         }
         
         public void onImageCapture(Affdex.Frame frame){
@@ -173,6 +202,10 @@ namespace HelloAffectiva{
                 foreach (PropertyInfo prop in typeof(Affdex.Expressions).GetProperties()){
                     float value = (float)prop.GetValue(face.Expressions, null);
                     String c = String.Format("{0}: {1:0.00}", prop.Name, value);
+                    if (actions.ContainsKey(prop.Name.ToLower()))
+                    {
+                        actions[prop.Name.ToLower()].executeAction(value);
+                    }
                     if (draw)
                     {
                         g.DrawString(c, aFont, (value > 50) ? whitePen.Brush : redPen.Brush, new PointF(drawingPoint.X, padding += spacing));

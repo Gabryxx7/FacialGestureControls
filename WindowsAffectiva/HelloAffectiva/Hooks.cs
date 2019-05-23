@@ -130,18 +130,10 @@ namespace HelloAffectiva
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName); //Find A Window
         [DllImport("user32.dll", EntryPoint = "SendMessage", SetLastError = true)]
         public static extern IntPtr SendMessage(IntPtr hWnd, Int32 Msg, IntPtr wParam, IntPtr lParam); //Send System Message
-
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessageTimeout(
-           IntPtr windowHandle,
-           uint Msg,
-           IntPtr wParam,
-           IntPtr lParam,
-           SendMessageTimeoutFlags flags,
-           uint timeout,
-           out IntPtr result);
+        public static extern IntPtr SendMessageTimeout( IntPtr windowHandle, uint Msg, IntPtr wParam,IntPtr lParam,SendMessageTimeoutFlags flags,uint timeout, out IntPtr result);
         public static void DecreaseVolume()
         {
             System.Console.WriteLine("Increasing volume");
