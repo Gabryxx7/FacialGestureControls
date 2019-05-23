@@ -204,6 +204,10 @@ namespace AffdexMe
                                     actions.actionsFunction[feature.ActionName].Invoke(handle);
                                 }
                             }
+                            else
+                            {
+                                feature.timer.Restart();
+                            }
 
                         }
                         else
