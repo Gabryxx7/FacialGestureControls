@@ -89,7 +89,7 @@ namespace AffdexMe
             {
                 ActionsPanel.RowDefinitions.Add(new RowDefinition());
                 ActionsPanel.RowDefinitions[ActionsPanel.RowDefinitions.Count - 1].Height = new GridLength(1, GridUnitType.Auto);
-                Console.WriteLine(feature.Name);
+                //Console.WriteLine(feature.Name);
                 ActionsPanel.Children.Add(new ActionSelector(feature, actions.actionsFunction));
                 Grid.SetRow(ActionsPanel.Children[ActionsPanel.Children.Count - 1], ActionsPanel.RowDefinitions.Count - 1);
                 Grid.SetColumn(ActionsPanel.Children[ActionsPanel.Children.Count - 1], ActionsPanel.ColumnDefinitions.Count - 1);
@@ -106,54 +106,7 @@ namespace AffdexMe
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void MainWindow_ContentRendered(object sender, EventArgs e)
-        {/*
-            //I tried to create this DIctionary of string values and functions so that we can associate a function for each emotions/expressopn/emoji
-            Func<double, bool> smileIncreaseVol = (value) =>
-            {
-                if (value > 50)
-                {
-                    System.Console.WriteLine("TESING3");
-                    var handle = (new WindowInteropHelper(this)).Handle;
-                    //HookActions.hideAllWindows();
-                    HookActions.SendMessageW(handle, WmCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);//this.Handle represents the system handle
-                    return true;
-                }
-
-                return false;
-            };
-            AffectivaAction smileAction = new AffectivaAction(50, smileIncreaseVol);
-
-            Func<double, bool> sadDecreaseVol = (value) =>
-            {
-                if (value > 50)
-                {
-                    System.Console.WriteLine("TESING3");
-                    var handle = (new WindowInteropHelper(this)).Handle;
-                    //HookActions.hideAllWindows();
-                    HookActions.SendMessageW(handle, WmCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);//this.Handle represents the system handle
-                    return true;
-                }
-
-                return false;
-            };
-            AffectivaAction sadAction = new AffectivaAction(50, sadDecreaseVol);
-
-            Func<double, bool> eyesClosedHideWIndows = (value) =>
-            {
-                if (value > 50)
-                {
-                    System.Console.WriteLine("EYES CLOSED");
-                    HookActions.hideAllWindows();
-                    return true;
-                }
-
-                return false;
-            };
-            AffectivaAction eyesCLosedAction = new AffectivaAction(50, eyesClosedHideWIndows);
-
-            actions.Add(Affdex.Emoji.Smiley.ToString().ToLower(), smileAction);
-            actions.Add(Affdex.Emoji.Disappointed.ToString().ToLower(), sadAction);
-            actions.Add("eyeclosure", eyesCLosedAction);*/
+        {
             handle = (new WindowInteropHelper(this)).Handle;
             StartCameraProcessing();
         }
@@ -239,10 +192,10 @@ namespace AffdexMe
                             {
                                 if(feature.activationTime > 0)
                                 {
-                                    Console.WriteLine(name + ": Time elapsed since last call {0}", Stopwatch.GetTimestamp() - feature.lastTimeCalled);
-                                    if(Stopwatch.GetTimestamp() - feature.lastTimeCalled > feature.activationTime)
+                                    //Console.WriteLine(name + ": Time elapsed since last call {0}", feature.timer.Elapsed.Seconds);
+                                    if(feature.timer.Elapsed.Seconds > feature.activationTime)
                                     {
-                                        feature.lastTimeCalled = Stopwatch.GetTimestamp();
+                                        feature.timer.Restart();
                                         actions.actionsFunction[feature.ActionName].Invoke(handle);
                                     }
                                 }
@@ -257,10 +210,10 @@ namespace AffdexMe
                         {
                             if (feature.activationTime > 0)
                             {
-                                Console.WriteLine(name + ": Time elapsed since last call {0}", Stopwatch.GetTimestamp() - feature.lastTimeCalled);
-                                if (Stopwatch.GetTimestamp() - feature.lastTimeCalled > feature.activationTime)
+                                //Console.WriteLine(name + ": Time elapsed since last call {0}", feature.timer.Elapsed.Seconds);
+                                if (feature.timer.Elapsed.Seconds > feature.activationTime)
                                 {
-                                    feature.lastTimeCalled = Stopwatch.GetTimestamp();
+                                    feature.timer.Restart();
                                     actions.actionsFunction[feature.ActionName].Invoke(handle);
                                 }
                             }

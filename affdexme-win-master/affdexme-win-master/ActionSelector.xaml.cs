@@ -47,12 +47,12 @@ namespace AffdexMe
 
         public void ThresholdValue_LostFocus(object sender, EventArgs e)
         {
-            feature.threshold = int.Parse(ThresholdValue.Text.Trim());
+            feature.threshold = float.Parse(ThresholdValue.Text.Trim());
         }
 
         public void ActivationTime_LostFocus(object sender, EventArgs e)
         {
-            feature.activationTime = int.Parse(ActivationTime.Text.Trim());
+            feature.activationTime = float.Parse(ActivationTime.Text.Trim());
         }
 
         public void FeatureActionBox_SelectedChanged(object sender, SelectionChangedEventArgs e)

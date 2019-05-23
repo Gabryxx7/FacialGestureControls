@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,13 +27,14 @@ namespace AffdexMe
         public String ActionName = "";
         public float activationTime = 0;
         public float threshold = 0;
-        public long lastTimeCalled = 0;
+        public Stopwatch timer = new Stopwatch();
 
         public AffectivaFeature(FeatureType pType, String pName, String affName)
         {
             this.Type = pType;
             this.Name = pName;
             this.AffectivaName = affName;
+            this.timer.Start();
         }
 
         public AffectivaFeature(FeatureType pType, String pName, String affName, String actionName) : this(pType, pName, affName)
