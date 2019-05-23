@@ -1,0 +1,3 @@
+The Affdex SDK contains, depends on, or derives from
+third-party software. For more information, please visit
+http://developer.affectiva.com/licenses

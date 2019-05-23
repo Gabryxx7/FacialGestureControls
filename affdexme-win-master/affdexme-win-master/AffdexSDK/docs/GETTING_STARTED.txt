@@ -1,0 +1,5 @@
+Welcome to the Affdex SDK
+-------------------------
+
+Please visit: http://developer.affectiva.com
+For an in-depth overview of the SDK.
