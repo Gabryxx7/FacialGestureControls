@@ -1,1 +1,0 @@
-c:\users\ebabaei\documents\visual studio 2015\Projects\HelloAffectiva\HelloAffectiva\bin\Release\HelloAffectiva.exe.config
