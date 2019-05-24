@@ -11,6 +11,7 @@ using System.IO;
 using System.Windows.Interop;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Linq;
 
 namespace AffdexMe
 {
@@ -89,8 +90,8 @@ namespace AffdexMe
             {
                 ActionsPanel.RowDefinitions.Add(new RowDefinition());
                 ActionsPanel.RowDefinitions[ActionsPanel.RowDefinitions.Count - 1].Height = new GridLength(1, GridUnitType.Auto);
-                //Console.WriteLine(feature.Name);
-                ActionsPanel.Children.Add(new ActionSelector(feature, actions.actionsFunction));
+                feature.actionControl = new ActionSelector(feature, actions.actionsFunction);
+                ActionsPanel.Children.Add(feature.actionControl);
                 Grid.SetRow(ActionsPanel.Children[ActionsPanel.Children.Count - 1], ActionsPanel.RowDefinitions.Count - 1);
                 Grid.SetColumn(ActionsPanel.Children[ActionsPanel.Children.Count - 1], ActionsPanel.ColumnDefinitions.Count - 1);
             }
@@ -135,17 +136,15 @@ namespace AffdexMe
             String name = null;
             PropertyInfo prop = null;
             float value = -1;
-            foreach (KeyValuePair<int, Affdex.Face> pair in faces)
+            //foreach (KeyValuePair<int, Affdex.Face> pair in faces)
+            if(faces.Count > 0)
             {
-                Affdex.Face face = pair.Value;
+                // Affdex.Face face = pair.Value; //Thi is for all the faces
+                Affdex.Face face = faces[faces.Keys.Min()];
                 var featurePoints = face.FeaturePoints;
                 foreach(AffectivaFeature feature in actions.featuresActions)
                 {
                     name = feature.AffectivaName;
-                    if (feature.ActionName == "")
-                    {
-                        continue;
-                    }
 
                     prop = null;
                     value = -1;
@@ -180,56 +179,72 @@ namespace AffdexMe
 
                         if (prop != null)
                         {
-                            value = (float)prop.GetValue(face.Appearance, null);
+                            value = 1;
+                            //value = (float)prop.GetValue(face.Appearance, null);
                         }
                     }
 
-                    if (prop != null && value >= 0 && actions.actionsFunction.ContainsKey(feature.ActionName))
+                    if (prop != null && value >= 0)
                     {
+                        feature.currentValue = value;
+                        AffectivaFeature localFeature = feature;
+                        this.Dispatcher.BeginInvoke(new Action<AffectivaFeature>(updateActionSelector), new object[] { localFeature });
                         if (feature.threshold > 0)
                         {
-                            if(value >= feature.threshold)
+                            if (value >= feature.threshold)
                             {
-                                if(feature.activationTime > 0)
+                                if (feature.activationTime > 0)
                                 {
-                                    //Console.WriteLine(name + ": Time elapsed since last call {0}", feature.timer.Elapsed.Seconds);
-                                    if(feature.timer.Elapsed.Seconds > feature.activationTime)
+                                    if (feature.timer.Elapsed.TotalSeconds >= feature.activationTime)
                                     {
                                         feature.timer.Restart();
-                                        actions.actionsFunction[feature.ActionName].Invoke(handle);
+                                        if (actions.actionsFunction.ContainsKey(feature.ActionName))
+                                            actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
                                     }
                                 }
                                 else
                                 {
-                                    actions.actionsFunction[feature.ActionName].Invoke(handle);
+                                    if (actions.actionsFunction.ContainsKey(feature.ActionName))
+                                        actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
                                 }
                             }
                             else
                             {
                                 feature.timer.Restart();
                             }
-
                         }
                         else
                         {
                             if (feature.activationTime > 0)
                             {
-                                //Console.WriteLine(name + ": Time elapsed since last call {0}", feature.timer.Elapsed.Seconds);
-                                if (feature.timer.Elapsed.Seconds > feature.activationTime)
+                                if (feature.timer.Elapsed.TotalSeconds >= feature.activationTime)
                                 {
                                     feature.timer.Restart();
-                                    actions.actionsFunction[feature.ActionName].Invoke(handle);
+                                    if (actions.actionsFunction.ContainsKey(feature.ActionName))
+                                        actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
                                 }
                             }
                             else
                             {
-                                actions.actionsFunction[feature.ActionName].Invoke(handle);
+                                if (actions.actionsFunction.ContainsKey(feature.ActionName))
+                                    actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
                             }
                         }
                     }
                 }
             }
             DrawData(image, faces);
+        }
+
+        public void updateActionSelector(AffectivaFeature feature)
+        {
+            feature.actionControl.ActualValue.Value = feature.currentValue;
+            if (feature.activationTime > 0)
+            {
+                float val = 100 * ((float)feature.timer.Elapsed.TotalMilliseconds / (feature.activationTime * 1000));
+                Console.WriteLine("Elapsed: " + feature.timer.Elapsed.TotalMilliseconds + ", Time: " + feature.activationTime + " Val :" + val);
+                feature.actionControl.ActualTime.Value = val;
+            }
         }
 
         /// <summary>
@@ -420,16 +435,16 @@ namespace AffdexMe
         /// </summary>
         private void TurnOnClassifiers()
         {
-            Detector.setDetectAllEmotions(false);
-            Detector.setDetectAllExpressions(false);
+            Detector.setDetectAllEmotions(true);
+            Detector.setDetectAllExpressions(true);
             Detector.setDetectAllEmojis(true);
             Detector.setDetectGender(true);
             Detector.setDetectGlasses(true);
-            foreach (String metric in EnabledClassifiers)
+            /*foreach (String metric in EnabledClassifiers)
             {
                 MethodInfo setMethodInfo = Detector.GetType().GetMethod(String.Format("setDetect{0}", canvas.NameMappings(metric)));
                 setMethodInfo.Invoke(Detector, new object[] { true });
-            }
+            }*/
         }
 
         /// <summary>

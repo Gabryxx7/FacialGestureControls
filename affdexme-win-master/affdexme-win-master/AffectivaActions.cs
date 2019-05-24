@@ -27,6 +27,10 @@ namespace AffdexMe
         public String ActionName = "";
         public float activationTime = 0;
         public float threshold = 0;
+        public float param1 = 0;
+        public string param2 = "";
+        public float currentValue = 0;
+        public ActionSelector actionControl;
         public Stopwatch timer = new Stopwatch();
 
         public AffectivaFeature(FeatureType pType, String affName, String pName)
@@ -59,7 +63,7 @@ namespace AffdexMe
     }
     public class AffectivaActions
     {        
-        public Dictionary<String, Func<IntPtr, bool>> actionsFunction = new Dictionary<String, Func<IntPtr, bool>>();
+        public Dictionary<String, Func<IntPtr, float ,string, bool>> actionsFunction = new Dictionary<String, Func<IntPtr, float, string, bool>>();
         public List<AffectivaFeature> featuresActions = new List<AffectivaFeature>();
         private static AffectivaActions instance = null;
 
@@ -72,22 +76,21 @@ namespace AffdexMe
         }
         private AffectivaActions()
         {
-            actionsFunction.Add("VolumeUp", (handle) =>
+            actionsFunction.Add("VolumeUp", (handle, param1, param2) =>
             {
                 Console.WriteLine("VOLUME UP");
-                // var handle = (new WindowInteropHelper(this)).Handle;
                 HookActions.SendMessage(handle, WmCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
                 return true;
             });
 
-            actionsFunction.Add("VolumeDown", (handle) =>
+            actionsFunction.Add("VolumeDown", (handle, param1, param2) =>
             {
                 Console.WriteLine("VOLUME DOWN");
                 HookActions.SendMessage(handle, WmCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);
                 return true;
             });
 
-            actionsFunction.Add("hideAllWindows", (handle) =>
+            actionsFunction.Add("hideAllWindows", (handle, param1, param2) =>
             {
                 Console.WriteLine("HIDE WINDOWS");
                 IntPtr OutResult;

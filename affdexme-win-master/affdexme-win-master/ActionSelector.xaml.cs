@@ -20,13 +20,13 @@ namespace AffdexMe
     /// </summary>
     public partial class ActionSelector : UserControl
     {
-        AffectivaFeature feature;
+        public AffectivaFeature feature;
         public ActionSelector()
         {
             InitializeComponent();
         }
         
-        public ActionSelector(AffectivaFeature feature, Dictionary<String, Func<IntPtr, bool>> actionsFunction) : this()
+        public ActionSelector(AffectivaFeature feature, Dictionary<String, Func<IntPtr, float, string, bool>> actionsFunction) : this()
         {
             this.feature = feature;
             FeatureName.Content = feature.Name;

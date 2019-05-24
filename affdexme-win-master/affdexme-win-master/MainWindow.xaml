@@ -226,11 +226,15 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Label Content="Feature"  />
                     <Label Content="Threshold" Grid.Column="1"  />
                     <Label Content="Time" Grid.Column="2"  />
                     <Label Content="Action" Grid.Column="3"  />
+                    <Label Content="Extra1" Grid.Column="4"  />
+                    <Label Content="Extra2" Grid.Column="5"  />
                 </Grid>
 
                 <AffdexMe:ActionSelector Grid.Row="1" />

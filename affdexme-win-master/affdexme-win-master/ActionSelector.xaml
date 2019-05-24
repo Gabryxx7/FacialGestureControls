@@ -14,10 +14,16 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Label Name="FeatureName" Content="Test" Grid.Row="0" Grid.Column="0"  />
-        <TextBox Name="ThresholdValue" Text="1" Grid.Row="0" Grid.Column="1"  />
-        <TextBox Name="ActivationTime" Text="2" Grid.Row="0" Grid.Column="2"  />
+        <ProgressBar Name="ActualValue" Grid.Row="0" Grid.Column="1"  />
+        <TextBox Name="ThresholdValue" Text="1" Grid.Row="0" Grid.Column="1" Opacity="0.6"  />
+        <ProgressBar Name="ActualTime" Grid.Row="0" Grid.Column="2"  />
+        <TextBox Name="ActivationTime" Text="2" Grid.Row="0" Grid.Column="2" Opacity="0.6"  />
         <ComboBox Name="FeatureActionBox"  Grid.Row="0" Grid.Column="3"  />
+        <TextBox Name="FeatureActionParam1"  Grid.Row="0" Grid.Column="4"  />
+        <TextBox Name="FeatureActionParam2"  Grid.Row="0" Grid.Column="5"  />
     </Grid>
 </UserControl>
