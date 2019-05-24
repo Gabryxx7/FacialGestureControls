@@ -145,13 +145,18 @@
     </Window.Resources>
 
     <Grid Name="gridMainDisplay" Margin="0,0,0,0" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.6*" />
+            <ColumnDefinition Width="0.4*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
         <Grid Name="gridContentDisplay" DockPanel.Dock="Top">
-
-
             <StackPanel Name="stackPanelImage" Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-
-                <Grid Name="gridAffdexFaceDisplay" VerticalAlignment="Top" Width="1200" Height="720" HorizontalAlignment="Left" >
+                <Grid Name="gridAffdexFaceDisplay" >
                     <Image Name="cameraDisplay" Visibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill"/>
 
                     <Image Name="logoBackground" Margin="40,40,40,85" Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
@@ -162,51 +167,49 @@
                 </Grid>
             </StackPanel>
 
-            <StackPanel Name="cornerLogo" Orientation="Vertical" Background="Transparent" Height="75" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,304,0" Width="1200" >
+            <StackPanel Name="cornerLogo" Orientation="Vertical" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" >
                 <Grid Name="gridLogoBackground">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.36*" />
                         <ColumnDefinition Width="0.28*" />
                         <ColumnDefinition Width="0.36*" />
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="35" />
-                        <RowDefinition Height="20" />
+                        <RowDefinition Height="60" />
                     </Grid.RowDefinitions>
 
                     <Image Name="imgAffdexLogoBackground" Width="auto" Grid.Column="2" Grid.Row="0"
-                            HorizontalAlignment="Right" VerticalAlignment="Stretch" 
-                            Height="Auto" Source="Resources\AffectivaLogo1.png" Margin="0,10,10,-24" Grid.RowSpan="3" Grid.ColumnSpan="1"/>
+                            HorizontalAlignment="Right" VerticalAlignment="Top" 
+                            Height="Auto" Source="Resources\AffectivaLogo1.png"/>
                 </Grid>
             </StackPanel>
+            <DockPanel VerticalAlignment="Bottom">
+                <DockPanel.Background>
+                    <SolidColorBrush Color="Gray" Opacity="0.2"/>
+                </DockPanel.Background>
+
+                <Grid HorizontalAlignment="Center">
+                    <GroupBox Margin="0,5,0,0"  Height="40" VerticalAlignment="Stretch" BorderBrush="Transparent" BorderThickness="0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button Name="btnStartCamera" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Start" />
+                            <Button Name="btnResetCamera" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Reset" />
+                            <Button Name="Metrics" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Show Metrics" />
+                            <Button Name="Points" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Show Points" />
+                            <Button Name="Emojis" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Show Emojis" />
+                            <Button Name="Appearance" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="110" Content="Show Appearance" />
+                            <Button Name="btnAppShot" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="100" Content="Take Screenshot" />
+                            <Button Name="btnChooseWin" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Select Metrics" Click="btnChooseWin_Click" />
+                            <Button Name="btnStopCamera" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Stop" />
+                            <Button Name="btnExit" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Bottom" Width="80" Content="Exit" />
+                        </StackPanel>
+                    </GroupBox>
+                </Grid>
+            </DockPanel>
         </Grid>
 
-        <DockPanel VerticalAlignment="Bottom" Margin="0,0,293,0" Width="1200">
-            <DockPanel.Background>
-                <SolidColorBrush Color="Gray" Opacity="0.2"/>
-            </DockPanel.Background>
-
-            <Grid HorizontalAlignment="Center">
-                <GroupBox Margin="0,5,0,0"  Height="40" VerticalAlignment="Stretch" BorderBrush="Transparent" BorderThickness="0">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Name="btnStartCamera" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Start" />
-                        <Button Name="btnResetCamera" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Reset" />
-                        <Button Name="Metrics" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Show Metrics" />
-                        <Button Name="Points" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Show Points" />
-                        <Button Name="Emojis" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Show Emojis" />
-                        <Button Name="Appearance" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="110" Content="Show Appearance" />
-                        <Button Name="btnAppShot" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="100" Content="Take Screenshot" />
-                        <Button Name="btnChooseWin" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Select Metrics" Click="btnChooseWin_Click" />
-                        <Button Name="btnStopCamera" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Top" Width="80" Content="Stop" />
-                        <Button Name="btnExit" Style="{StaticResource CustomButtonStyle}" HorizontalAlignment="Center" Margin="0,0,5,0" VerticalAlignment="Bottom" Width="80" Content="Exit" />
-                    </StackPanel>
-                </GroupBox>
-            </Grid>
-        </DockPanel>
-        <ScrollViewer VerticalScrollBarVisibility="Visible" Margin="1222,0,0,0">
-            <Grid Name="ActionsPanel"   HorizontalAlignment="Right" VerticalAlignment="Top" Width="322" Height="681" ScrollViewer.CanContentScroll="True">
+        
+        <ScrollViewer VerticalScrollBarVisibility="Visible" Grid.Column="1" >
+            <Grid Name="ActionsPanel" ScrollViewer.CanContentScroll="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -228,8 +231,8 @@
                     <Label Content="Threshold" Grid.Column="1"  />
                     <Label Content="Time" Grid.Column="2"  />
                     <Label Content="Action" Grid.Column="3"  />
-                </Grid> 
-                    
+                </Grid>
+
                 <AffdexMe:ActionSelector Grid.Row="1" />
             </Grid>
         </ScrollViewer>

@@ -29,25 +29,25 @@ namespace AffdexMe
         public float threshold = 0;
         public Stopwatch timer = new Stopwatch();
 
-        public AffectivaFeature(FeatureType pType, String pName, String affName)
+        public AffectivaFeature(FeatureType pType, String affName, String pName)
         {
             this.Type = pType;
-            this.Name = pName;
             this.AffectivaName = affName;
+            this.Name = pName;
             this.timer.Start();
         }
 
-        public AffectivaFeature(FeatureType pType, String pName, String affName, String actionName) : this(pType, pName, affName)
+        public AffectivaFeature(FeatureType pType, String affName, String pName, String actionName) : this(pType, affName, pName)
         {
             this.ActionName = actionName;
         }
 
-        public AffectivaFeature(FeatureType pType, String pName, String affName, String actionName, float threshold) : this(pType, pName, affName, actionName)
+        public AffectivaFeature(FeatureType pType, String affName, String pName, String actionName, float threshold) : this(pType, affName, pName, actionName)
         {
             this.threshold = threshold;
         }
 
-        public AffectivaFeature(FeatureType pType, String pName, String affName, String actionName, float threshold, float activationTime) : this(pType, pName, affName, actionName, threshold)
+        public AffectivaFeature(FeatureType pType, String affName, String pName, String actionName, float threshold, float activationTime) : this(pType, affName, pName, actionName, threshold)
         {
             this.activationTime = activationTime;
         }
@@ -105,11 +105,11 @@ namespace AffdexMe
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"stuckOutTongueWinkingEye", "StuckOutTongueWinkingEye"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"wink", "Wink"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"smirk", "Smirk"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"rage", "Scream"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "disappointed", "Disappointed", "VolumeDown", 90));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"rage", "Rage"));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "disappointed", "Disappointed"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "kissing", "Kissing"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "laughing", "Laughing"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "smiley", "Smiley", "VolumeUp", 70));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "smiley", "Smiley"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "relaxed", "Relaxed"));
 
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "BrowRaise", "BrowRaise"));
@@ -123,7 +123,7 @@ namespace AffdexMe
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipSuck", "LipSuck"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "MouthOpen", "MouthOpen"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Smirk", "Smirk"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "EyeClosure", "EyeClosure", "", 50, 2000));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "EyeClosure", "EyeClosure"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Attention", "Attention"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "EyeWiden", "EyeWiden"));
             featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "CheekRaise", "CheekRaise"));
@@ -162,11 +162,21 @@ namespace AffdexMe
                     {
                         foreach (AffectivaFeature feature in featuresActions)
                         {
-                            if (feature.AffectivaName == csv.GetField<string>("name"))
+                            if (feature.AffectivaName == csv.GetField<string>("AffectivaName"))
                             {
+                                try
+                                {
+                                    feature.Type = (AffectivaFeature.FeatureType) Enum.Parse(typeof(AffectivaFeature.FeatureType), csv.GetField<string>("Type"));
+                                }
+                                catch (Exception e)
+                                {
+                                    feature.Type = (AffectivaFeature.FeatureType)csv.GetField<int>("Type");
+                                }
+                                feature.AffectivaName = csv.GetField<string>("AffectivaName");
+                                feature.Name = csv.GetField<string>("Name");
+                                feature.ActionName = csv.GetField<string>("ActionName");
                                 feature.threshold = csv.GetField<float>("threshold");
                                 feature.activationTime = csv.GetField<float>("activationTime");
-                                feature.ActionName = csv.GetField<string>("action");
                                 break;
                             }
                         }
@@ -186,14 +196,18 @@ namespace AffdexMe
                 using (var writer = new StreamWriter("data.csv"))
                 using (var csv = new CsvHelper.CsvWriter(writer))
                 {
-                    csv.WriteField("name");
-                    csv.WriteField("action");
+                    csv.WriteField("Type");
+                    csv.WriteField("AffectivaName");
+                    csv.WriteField("Name");
+                    csv.WriteField("ActionName");
                     csv.WriteField("threshold");
                     csv.WriteField("activationTime");
                     csv.NextRecord();
                     foreach (AffectivaFeature feature in featuresActions)
                     {
+                        csv.WriteField(feature.Type);
                         csv.WriteField(feature.AffectivaName);
+                        csv.WriteField(feature.Name);
                         csv.WriteField(feature.ActionName);
                         csv.WriteField(feature.threshold);
                         csv.WriteField(feature.activationTime);
