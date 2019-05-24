@@ -12,7 +12,8 @@ namespace AffdexMe
     {
         static public String GetClassifierDataFolder()
         {
-            return "..\\..\\..\\AffdexSDK\\data";
+            return "AffdexSDK\\data";
+            //return "..\\..\\..\\AffdexSDK\\data";
         }
     }
 }
