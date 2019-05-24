@@ -166,23 +166,6 @@
                     <Label Name="appShotLocLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource appShotLocLabelStyle}" />
                 </Grid>
             </StackPanel>
-
-            <StackPanel Name="cornerLogo" Orientation="Vertical" Background="Transparent" HorizontalAlignment="Right" VerticalAlignment="Top" >
-                <Grid Name="gridLogoBackground">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="0.28*" />
-                        <ColumnDefinition Width="0.36*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60" />
-                    </Grid.RowDefinitions>
-
-                    <Image Name="imgAffdexLogoBackground" Width="auto" Grid.Column="2" Grid.Row="0"
-                            HorizontalAlignment="Right" VerticalAlignment="Top" 
-                            Height="Auto" Source="Resources\AffectivaLogo1.png"/>
-                </Grid>
-            </StackPanel>
             <DockPanel VerticalAlignment="Bottom">
                 <DockPanel.Background>
                     <SolidColorBrush Color="Gray" Opacity="0.2"/>
@@ -212,23 +195,14 @@
             <Grid Name="ActionsPanel" ScrollViewer.CanContentScroll="True">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Grid>
+                <Grid Name="ActionControlContainer" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
                     <Label Content="Feature"  />
                     <Label Content="Threshold" Grid.Column="1"  />
                     <Label Content="Time" Grid.Column="2"  />
@@ -236,8 +210,6 @@
                     <Label Content="Extra1" Grid.Column="4"  />
                     <Label Content="Extra2" Grid.Column="5"  />
                 </Grid>
-
-                <AffdexMe:ActionSelector Grid.Row="1" />
             </Grid>
         </ScrollViewer>
     </Grid>

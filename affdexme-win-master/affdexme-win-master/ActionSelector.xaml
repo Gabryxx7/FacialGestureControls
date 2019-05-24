@@ -5,7 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AffdexMe"
              mc:Ignorable="d">
-    <Grid >
+    <UserControl.Resources>
+        <local:ProgressForegroundConverter x:Key="ProgressForegroundConverter"/>
+    </UserControl.Resources>
+    <Grid Name="ActionSelectorGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -18,10 +21,14 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Label Name="FeatureName" Content="Test" Grid.Row="0" Grid.Column="0"  />
-        <ProgressBar Name="ActualValue" Grid.Row="0" Grid.Column="1"  />
-        <TextBox Name="ThresholdValue" Text="1" Grid.Row="0" Grid.Column="1" Opacity="0.6"  />
-        <ProgressBar Name="ActualTime" Grid.Row="0" Grid.Column="2"  />
-        <TextBox Name="ActivationTime" Text="2" Grid.Row="0" Grid.Column="2" Opacity="0.6"  />
+        <ProgressBar Name="ActualValue" Grid.Row="0" Grid.Column="1" Opacity="0.85"
+                     Value="{Binding ElementName=progress, Path=Value}"
+                 Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}" Background="White"/>
+        <TextBox Name="ThresholdValue" Text="1" Grid.Row="0" Grid.Column="1" Background="Transparent" />
+        <ProgressBar Name="ActualTime" Grid.Row="0" Grid.Column="2"  Opacity="0.85"
+                     Value="{Binding ElementName=progress, Path=Value}"
+                 Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}" Background="White"/>
+        <TextBox Name="ActivationTime" Text="2" Grid.Row="0" Grid.Column="2"  Background="Transparent"   />
         <ComboBox Name="FeatureActionBox"  Grid.Row="0" Grid.Column="3"  />
         <TextBox Name="FeatureActionParam1"  Grid.Row="0" Grid.Column="4"  />
         <TextBox Name="FeatureActionParam2"  Grid.Row="0" Grid.Column="5"  />

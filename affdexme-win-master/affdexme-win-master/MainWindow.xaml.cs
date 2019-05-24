@@ -26,6 +26,12 @@ namespace AffdexMe
         {
             InitializeComponent();
             CenterWindowOnScreen();
+            ColumnDefinitionCollection test = new ActionSelector().ActionSelectorGrid.ColumnDefinitions;
+            this.ActionControlContainer.ColumnDefinitions.Clear();
+            foreach (ColumnDefinition col in test)
+            {
+                this.ActionControlContainer.ColumnDefinitions.Add(new ColumnDefinition() { Width = col.Width });
+            }
             Closing += OnWindowClosing;
         }
 
@@ -46,7 +52,6 @@ namespace AffdexMe
 
             // Show the logo
             logoBackground.Visibility = Visibility.Visible;
-            cornerLogo.Visibility = Visibility.Hidden;
 
             EnabledClassifiers = AffdexMe.Settings.Default.Classifiers;
             canvas.MetricNames = EnabledClassifiers;
@@ -408,7 +413,7 @@ namespace AffdexMe
             try
             {
                 // Hide Camera feed;
-                cameraDisplay.Visibility = cornerLogo.Visibility = Visibility.Hidden;
+                cameraDisplay.Visibility = Visibility.Hidden;
 
                 // Clear any drawn data
                 canvas.Faces = new Dictionary<int, Affdex.Face>();
@@ -484,7 +489,6 @@ namespace AffdexMe
 
                 // Hide the logo, show the camera feed and the data canvas
                 logoBackground.Visibility = Visibility.Hidden;
-                cornerLogo.Visibility = Visibility.Visible;
                 canvas.Visibility = Visibility.Visible;
                 cameraDisplay.Visibility = Visibility.Visible;
             }
