@@ -14,102 +14,6 @@ using System.Windows.Forms;
 
 namespace AffdexMe
 {
-    public class WmCommand
-    {
-        public const int WM_APPCOMMAND = 0x319;
-        public const int WM_COMMAND = 0x111;
-        public const int MIN_ALL = 419;
-        public const int MIN_ALL_UNDO = 416;
-    }
-    public class AppCommand
-    {
-        public const int APPCOMMAND_BROWSER_BACKWARD = 1;
-        public const int APPCOMMAND_BROWSER_FORWARD = 2;
-        public const int APPCOMMAND_BROWSER_REFRESH = 3;
-        public const int APPCOMMAND_BROWSER_STOP = 4;
-        public const int APPCOMMAND_BROWSER_SEARCH = 5;
-        public const int APPCOMMAND_BROWSER_FAVORITES = 6;
-        public const int APPCOMMAND_BROWSER_HOME = 7;
-        public const int APPCOMMAND_VOLUME_MUTE = 0x80000;
-        public const int APPCOMMAND_VOLUME_DOWN = 0x90000;
-        public const int APPCOMMAND_VOLUME_UP = 0xA0000;
-        public const int APPCOMMAND_MEDIA_NEXTTRACK = 11;
-        public const int APPCOMMAND_MEDIA_PREVIOUSTRACK = 12;
-        public const int APPCOMMAND_MEDIA_STOP = 13;
-        public const int APPCOMMAND_MEDIA_PLAY_PAUSE = 14;
-        public const int APPCOMMAND_LAUNCH_MAIL = 15;
-        public const int APPCOMMAND_LAUNCH_MEDIA_SELECT = 16;
-        public const int APPCOMMAND_LAUNCH_APP1 = 17;
-        public const int APPCOMMAND_LAUNCH_APP2 = 18;
-        public const int APPCOMMAND_BASS_DOWN = 19;
-        public const int APPCOMMAND_BASS_BOOST = 20;
-        public const int APPCOMMAND_BASS_UP = 21;
-        public const int APPCOMMAND_TREBLE_DOWN = 22;
-        public const int APPCOMMAND_TREBLE_UP = 23;
-        public const int APPCOMMAND_MICROPHONE_VOLUME_MUTE = 24;
-        public const int APPCOMMAND_MICROPHONE_VOLUME_DOWN = 25;
-        public const int APPCOMMAND_MICROPHONE_VOLUME_UP = 26;
-        public const int APPCOMMAND_HELP = 27;
-        public const int APPCOMMAND_FIND = 28;
-        public const int APPCOMMAND_NEW = 29;
-        public const int APPCOMMAND_OPEN = 30;
-        public const int APPCOMMAND_CLOSE = 31;
-        public const int APPCOMMAND_SAVE = 32;
-        public const int APPCOMMAND_PRINT = 33;
-        public const int APPCOMMAND_UNDO = 34;
-        public const int APPCOMMAND_REDO = 35;
-        public const int APPCOMMAND_COPY = 36;
-        public const int APPCOMMAND_CUT = 37;
-        public const int APPCOMMAND_PASTE = 38;
-        public const int APPCOMMAND_REPLY_TO_MAIL = 39;
-        public const int APPCOMMAND_FORWARD_MAIL = 40;
-        public const int APPCOMMAND_SEND_MAIL = 41;
-        public const int APPCOMMAND_SPELL_CHECK = 42;
-        public const int APPCOMMAND_DICTATE_OR_COMMAND_CONTROL_TOGGLE = 43;
-        public const int APPCOMMAND_MIC_ON_OFF_TOGGLE = 44;
-        public const int APPCOMMAND_CORRECTION_LIST = 45;
-        public const int APPCOMMAND_MEDIA_PLAY = 46;
-        public const int APPCOMMAND_MEDIA_PAUSE = 47;
-        public const int APPCOMMAND_MEDIA_RECORD = 48;
-        public const int APPCOMMAND_MEDIA_FAST_FORWARD = 49;
-        public const int APPCOMMAND_MEDIA_REWIND = 50;
-        public const int APPCOMMAND_MEDIA_CHANNEL_UP = 51;
-        public const int APPCOMMAND_MEDIA_CHANNEL_DOWN = 52;
-        public const int APPCOMMAND_DELETE = 53;
-        public const int APPCOMMAND_DWM_FLIP3D = 54;
-    }
-
-    // Hook Types
-    public enum HookType : int
-    {
-        WH_JOURNALRECORD = 0,
-        WH_JOURNALPLAYBACK = 1,
-        WH_KEYBOARD = 2,
-        WH_GETMESSAGE = 3,
-        WH_CALLWNDPROC = 4,
-        WH_CBT = 5,
-        WH_SYSMSGFILTER = 6,
-        WH_MOUSE = 7,
-        WH_HARDWARE = 8,
-        WH_DEBUG = 9,
-        WH_SHELL = 10,
-        WH_FOREGROUNDIDLE = 11,
-        WH_CALLWNDPROCRET = 12,
-        WH_KEYBOARD_LL = 13,
-        WH_MOUSE_LL = 14
-    }
-
-    [Flags]
-    public enum SendMessageTimeoutFlags : uint
-    {
-        SMTO_NORMAL = 0x0,
-        SMTO_BLOCK = 0x1,
-        SMTO_ABORTIFHUNG = 0x2,
-        SMTO_NOTIMEOUTIFNOTHUNG = 0x8
-    }
-
-
-
     public class HookActions
     {
         public delegate bool EnumDelegate(IntPtr hWnd, int lParam);
@@ -145,48 +49,58 @@ namespace AffdexMe
             uint pID;
             GetWindowThreadProcessId(hWnd, out pID);
 
-            SendMessage(hWnd, WmCommand.WM_APPCOMMAND, hWnd, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);
+            SendMessage(hWnd, WMCommand.WM_APPCOMMAND, hWnd, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);
         }
 
-        public static void OpenApplication(string appExeName)
+        public static bool OpenApplication(string appExeName)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = appExeName;
             try
             {
                 Process.Start(startInfo);
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("Could not open {0}: {1}", appExeName, e.Message);
+                return false;
             }
         }
 
-        public static string TakeScreenshot(string folder)
+        public static bool TakeScreenshot(string folder, string filename)
         {
-            Rectangle bounds = Screen.GetBounds(Point.Empty);
-            string filename = "none";
-            using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
+            try
             {
-                using (Graphics g = Graphics.FromImage(bitmap))
+                Rectangle bounds = Screen.GetBounds(Point.Empty);
+                using (Bitmap bitmap = new Bitmap(bounds.Width, bounds.Height))
                 {
-                    g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                    using (Graphics g = Graphics.FromImage(bitmap))
+                    {
+                        g.CopyFromScreen(Point.Empty, Point.Empty, bounds.Size);
+                    }
+                    filename = folder + "\\" +filename;
+                    bitmap.Save(filename, ImageFormat.Jpeg);
                 }
-                filename = folder + @"\ScreenShot-" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".jpg";
-                bitmap.Save(filename, ImageFormat.Jpeg);
+                return true;
             }
-            return filename;
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
-        public static void OpenBrowser(string url)
+        public static bool OpenBrowser(string url)
         {
             try
             {
                 Process.Start(url);
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("Could not open {0}: {1}", url, e.Message);
+                return false;
             }
         }
 
@@ -199,21 +113,19 @@ namespace AffdexMe
 
             uint pID;
             GetWindowThreadProcessId(hWnd, out pID);
-            SendMessage(hWnd, WmCommand.WM_APPCOMMAND, hWnd, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
+            SendMessage(hWnd, WMCommand.WM_APPCOMMAND, hWnd, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
         }
 
         public static void IncreaseSystemVolume(IntPtr handle)
         {
-            SendMessage(handle, WmCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
+            SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
         }
 
         public static void hideAllWindows()
         {
             IntPtr OutResult;
             IntPtr lHwnd = FindWindow("Shell_TrayWnd", null);
-            SendMessageTimeout(lHwnd, WmCommand.WM_COMMAND, (IntPtr)WmCommand.MIN_ALL, IntPtr.Zero, SendMessageTimeoutFlags.SMTO_ABORTIFHUNG, 2000, out OutResult);
-            System.Threading.Thread.Sleep(2000);
-            SendMessageTimeout(lHwnd, WmCommand.WM_COMMAND, (IntPtr)WmCommand.MIN_ALL_UNDO, IntPtr.Zero, SendMessageTimeoutFlags.SMTO_ABORTIFHUNG, 2000, out OutResult);
+            SendMessageTimeout(lHwnd, WMCommand.WM_COMMAND, (IntPtr)WMCommand.MIN_ALL, IntPtr.Zero, SendMessageTimeoutFlags.SMTO_ABORTIFHUNG, 2000, out OutResult);
         }
     }
 

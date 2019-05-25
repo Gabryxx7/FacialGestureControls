@@ -26,9 +26,9 @@ namespace AffdexMe
         public String Name = "" ;
         public String AffectivaName = "";
         public String ActionName = "";
-        public float activationTime = 0;
-        public float threshold = 0;
-        public object param1 = 0;
+        public float activationTime = 1;
+        public float threshold = 50;
+        public object param1 = "";
         public object param2 = "";
         public float currentValue = 0;
         public ActionSelector actionControl;
@@ -81,25 +81,21 @@ namespace AffdexMe
             actionsFunction.Add("VolumeUp", (handle, param1, param2) =>
             {
                 Console.WriteLine("VOLUME UP");
-                HookActions.SendMessage(handle, WmCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
+                HookActions.SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
                 return true;
             });
 
             actionsFunction.Add("VolumeDown", (handle, param1, param2) =>
             {
                 Console.WriteLine("VOLUME DOWN");
-                HookActions.SendMessage(handle, WmCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);
+                HookActions.SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);
                 return true;
             });
 
             actionsFunction.Add("hideAllWindows", (handle, param1, param2) =>
             {
                 Console.WriteLine("HIDE WINDOWS");
-                IntPtr OutResult;
-                IntPtr lHwnd = HookActions.FindWindow("Shell_TrayWnd", null);
-                HookActions.SendMessageTimeout(lHwnd, WmCommand.WM_COMMAND, (IntPtr)WmCommand.MIN_ALL, IntPtr.Zero, SendMessageTimeoutFlags.SMTO_ABORTIFHUNG, 2000, out OutResult);
-                System.Threading.Thread.Sleep(2000);
-                HookActions.SendMessageTimeout(lHwnd, WmCommand.WM_COMMAND, (IntPtr)WmCommand.MIN_ALL_UNDO, IntPtr.Zero, SendMessageTimeoutFlags.SMTO_ABORTIFHUNG, 2000, out OutResult);
+                HookActions.hideAllWindows();
                 return true;
             });
 
@@ -131,28 +127,41 @@ namespace AffdexMe
             actionsFunction.Add("TakeScreenshot", (handle, param1, param2) =>
             {
                 //C:\Users\marinig\Desktop
-                string param = "";
+                string folderPath = "";
                 try
                 {
-                    param = (string)param1;
+                    folderPath = (string)param1;
                 }
                 catch (Exception e1)
                 {
                     try
                     {
-                        param = (string)param2;
+                        folderPath = (string)param2;
                     }
                     catch (Exception e2) { }
                 }
                 //IF empty it will just take the screenshot in the folder where the .exe is
-                Console.WriteLine("Taking Screenshot {0}", param);
-                string filename = HookActions.TakeScreenshot(param);
-                notificationManager.Show(new NotificationContent
+                Console.WriteLine("Taking Screenshot {0}", folderPath);
+                string filename = @"ScreenShot-" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".jpg";
+                if (HookActions.TakeScreenshot(folderPath, filename))
                 {
-                    Title = "Took Screenshot",
-                    Message = "Stored in " + filename,
-                    Type = NotificationType.Information
-                });
+                    notificationManager.Show(new NotificationContent
+                    {
+                        Title = "Screenshot Saved",
+                        Message = "Stored in " + filename,
+                        Type = NotificationType.Information
+                    });
+                }
+                else
+                {
+                    HookActions.TakeScreenshot("", filename);
+                    notificationManager.Show(new NotificationContent
+                    {
+                        Title = "Screenshot Error",
+                        Message = "Could not find the folder:" + folderPath +"\nScreenshot saved to program folder ",
+                        Type = NotificationType.Error
+                    });
+                }
                 return true;
 
             });
@@ -160,76 +169,88 @@ namespace AffdexMe
             actionsFunction.Add("OpenBrowser", (handle, param1, param2) =>
             {
                 //https://www.youtube.com/watch?v=Sagg08DrO5U
-                string param = "";
+                string url = "";
                 try
                 {
-                    param = (string)param1;
+                    url = (string)param1;
                 }
                 catch (Exception e1)
                 {
                     try
                     {
-                        param = (string)param2;
+                        url = (string)param2;
                     }
                     catch (Exception e2) { }
                 }
 
-                if (param != "")
+                Console.WriteLine("Opening Browser {0}", url);
+                if (HookActions.OpenBrowser(url))
                 {
-                    Console.WriteLine("Opening Browser {0}", param);
-                    HookActions.OpenBrowser(param);
+                    notificationManager.Show(new NotificationContent
+                    {
+                        Title = "Opening Browser",
+                        Message = "Opening url " + url,
+                        Type = NotificationType.Information
+                    });
                 }
-                return true;
-
+                else
+                {
+                    notificationManager.Show(new NotificationContent
+                    {
+                        Title = "Error opening Browser",
+                        Type = NotificationType.Error
+                    });
+                }
+                return false;
             });
 
 
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"scream", "Scream"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"flushed", "Flushed"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"stuckOutTongue", "StuckOutTongue"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"stuckOutTongueWinkingEye", "StuckOutTongueWinkingEye"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"wink", "Wink"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"smirk", "Smirk"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"rage", "Rage"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "disappointed", "Disappointed"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "kissing", "Kissing"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "laughing", "Laughing"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "smiley", "Smiley"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "relaxed", "Relaxed"));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"scream", "Scream", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"flushed", "Flushed", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"stuckOutTongue", "StuckOutTongue", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"stuckOutTongueWinkingEye", "StuckOutTongueWinkingEye", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"wink", "Wink", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"smirk", "Smirk", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"rage", "Rage", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "disappointed", "Disappointed", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "kissing", "Kissing", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "laughing", "Laughing", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "smiley", "Smiley", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji, "relaxed", "Relaxed", "", 50, 1));
 
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "BrowRaise", "BrowRaise"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "BrowFurrow", "BrowFurrow"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "NoseWrinkle", "NoseWrinkle"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "UpperLipRaise", "UpperLipRaise"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipCornerDepressor", "LipCornerDepressor"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "ChinRaise", "ChinRaise"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipPucker", "LipPucker"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipPress", "LipPress"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipSuck", "LipSuck"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "MouthOpen", "MouthOpen"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Smirk", "Smirk"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "EyeClosure", "EyeClosure"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Attention", "Attention"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "EyeWiden", "EyeWiden"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "CheekRaise", "CheekRaise"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LidTighten", "LidTighten"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Dimpler", "Dimpler"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipStretch", "LipStretch"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "JawDrop", "JawDrop"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "InnerBrowRaise", "InnerBrowRaise"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Smile", "Smile"));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "BrowRaise", "BrowRaise", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "BrowFurrow", "BrowFurrow", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "NoseWrinkle", "NoseWrinkle", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "UpperLipRaise", "UpperLipRaise", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipCornerDepressor", "LipCornerDepressor", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "ChinRaise", "ChinRaise", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipPucker", "LipPucker", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipPress", "LipPress", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipSuck", "LipSuck", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "MouthOpen", "MouthOpen", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Smirk", "Smirk", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "EyeClosure", "EyeClosure", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Attention", "Attention", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "EyeWiden", "EyeWiden", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "CheekRaise", "CheekRaise", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LidTighten", "LidTighten", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Dimpler", "Dimpler", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "LipStretch", "LipStretch", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "JawDrop", "JawDrop", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "InnerBrowRaise", "InnerBrowRaise", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Expression, "Smile", "Smile", "", 50, 1));
 
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Engagement", "Engagement"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Valence", "Valence"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Contempt", "Contempt"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Surprise", "Surprise"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Anger", "Anger"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Sadness", "Sadness"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Disgust", "Disgust"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Fear", "Fear"));
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Joy", "Joy"));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Engagement", "Engagement", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Valence", "Valence", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Contempt", "Contempt", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Surprise", "Surprise", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Anger", "Anger", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Sadness", "Sadness", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Disgust", "Disgust", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Fear", "Fear", "", 50, 1));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emotion, "Joy", "Joy", "", 50, 1));
 
-            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Appearance, "Glasses", "Glasses"));
+            featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Appearance, "Glasses", "Glasses", "", 50, 1));
 
             UpdateFromFile();
         }

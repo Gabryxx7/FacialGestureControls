@@ -145,7 +145,7 @@ namespace AffdexMe
             if(faces.Count > 0)
             {
                 // Affdex.Face face = pair.Value; //Thi is for all the faces
-                Affdex.Face face = faces[faces.Keys.Min()];
+                Affdex.Face face = faces[faces.Keys.Min()]; //Select only the first face (with smallest ID)
                 var featurePoints = face.FeaturePoints;
                 foreach(AffectivaFeature feature in actions.featuresActions)
                 {
@@ -194,46 +194,20 @@ namespace AffdexMe
                         feature.currentValue = value;
                         AffectivaFeature localFeature = feature;
                         this.Dispatcher.BeginInvoke(new Action<AffectivaFeature>(updateActionSelector), new object[] { localFeature });
-                        if (feature.threshold > 0)
+                       
+                        if (value >= feature.threshold)
                         {
-                            if (value >= feature.threshold)
-                            {
-                                if (feature.activationTime > 0)
-                                {
-                                    if (feature.timer.Elapsed.TotalSeconds >= feature.activationTime)
-                                    {
-                                        feature.timer.Restart();
-                                        if (actions.actionsFunction.ContainsKey(feature.ActionName))
-                                            actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
-                                    }
-                                }
-                                else
-                                {
-                                    if (actions.actionsFunction.ContainsKey(feature.ActionName))
-                                        actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
-                                }
-                            }
-                            else
+                            if (feature.timer.Elapsed.TotalSeconds >= feature.activationTime)
                             {
                                 feature.timer.Restart();
-                            }
-                        }
-                        else
-                        {
-                            if (feature.activationTime > 0)
-                            {
-                                if (feature.timer.Elapsed.TotalSeconds >= feature.activationTime)
-                                {
-                                    feature.timer.Restart();
-                                    if (actions.actionsFunction.ContainsKey(feature.ActionName))
-                                        actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
-                                }
-                            }
-                            else
-                            {
                                 if (actions.actionsFunction.ContainsKey(feature.ActionName))
                                     actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
                             }
+                           
+                        }
+                        else
+                        {
+                            feature.timer.Restart();
                         }
                     }
                 }
