@@ -101,9 +101,11 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppCommand.cs" />
+    <Compile Include="BrightnessControl.cs" />
     <Compile Include="DrawingCanvas.cs" />
     <Compile Include="FilePath.cs" />
     <Compile Include="Hooks.cs" />
+    <Compile Include="Keyboard.cs" />
     <Compile Include="MetricSelectionUI.xaml.cs" />
     <Compile Include="NameToResourceConverter.cs" />
     <Compile Include="ProgressForegroundConverter.cs" />

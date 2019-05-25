@@ -39,6 +39,8 @@ namespace AffdexMe
         public static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessageTimeout( IntPtr windowHandle, uint Msg, IntPtr wParam,IntPtr lParam,SendMessageTimeoutFlags flags,uint timeout, out IntPtr result);
+       
+
         public static void DecreaseVolume()
         {
             System.Console.WriteLine("Increasing volume");
@@ -119,6 +121,46 @@ namespace AffdexMe
         public static void IncreaseSystemVolume(IntPtr handle)
         {
             SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
+        }
+
+        public static void DecreaseSystemVolume(IntPtr handle)
+        {
+            SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);
+        }
+
+        public static void SystemMediaStop(IntPtr handle)
+        {
+            SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_MEDIA_STOP);
+        }
+
+        public static void SystemMediaPause(IntPtr handle)
+        {
+            SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_MEDIA_PAUSE);
+        }
+
+        public static void SystemMediaPlay(IntPtr handle)
+        {
+            SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_MEDIA_PLAY);
+        }
+
+        public static void SystemMediaPlayPause(IntPtr handle)
+        {
+            SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_MEDIA_PLAY_PAUSE);
+        }
+
+        public static void KeyboardPress(IntPtr handle, string key)
+        {
+            Keyboard.SendKeyDown(key);  
+        }
+
+        public static void BrightnessUp(IntPtr handle)
+        {
+            BrightnessControl.BrightnessUp(handle);
+        }
+
+        public static void BrightnessDown(IntPtr handle)
+        {
+            BrightnessControl.BrightnessDown(handle);
         }
 
         public static void hideAllWindows()

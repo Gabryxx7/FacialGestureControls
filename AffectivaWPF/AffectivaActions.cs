@@ -78,19 +78,85 @@ namespace AffdexMe
         }
         private AffectivaActions()
         {
-            actionsFunction.Add("VolumeUp", (handle, param1, param2) =>
+            actionsFunction.Add("BrightnessDown", (handle, param1, param2) =>
             {
-                Console.WriteLine("VOLUME UP");
-                HookActions.SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_UP);
+                Console.WriteLine("BRIGHTNESS DOWN");
+                HookActions.BrightnessDown(handle);
+                return true;
+            });
+
+            actionsFunction.Add("BrightnessUp", (handle, param1, param2) =>
+            {
+                Console.WriteLine("BRIGHTNESS UP");
+                HookActions.BrightnessUp(handle);
                 return true;
             });
 
             actionsFunction.Add("VolumeDown", (handle, param1, param2) =>
             {
                 Console.WriteLine("VOLUME DOWN");
-                HookActions.SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);
+                HookActions.IncreaseSystemVolume(handle);
                 return true;
             });
+
+            actionsFunction.Add("VolumeUp", (handle, param1, param2) =>
+            {
+                Console.WriteLine("VOLUME UP");
+                HookActions.DecreaseSystemVolume(handle);
+                return true;
+            });
+
+            actionsFunction.Add("MediaPlay", (handle, param1, param2) =>
+            {
+                Console.WriteLine("MEDIA PLAY");
+                HookActions.SystemMediaPlay(handle);
+                return true;
+            });
+
+            actionsFunction.Add("MediaPause", (handle, param1, param2) =>
+            {
+                Console.WriteLine("MEDIA PAUSE");
+                HookActions.SystemMediaPause(handle);
+                return true;
+            });
+
+            actionsFunction.Add("MediaStop", (handle, param1, param2) =>
+            {
+                Console.WriteLine("MEDIA STOP");
+                HookActions.SystemMediaStop(handle);
+                return true;
+            });
+
+            actionsFunction.Add("MediaPlayPause", (handle, param1, param2) =>
+            {
+                Console.WriteLine("MEDIA PLAY/PAUSE");
+                HookActions.SystemMediaPlayPause(handle);
+                return true;
+            });
+
+
+            actionsFunction.Add("KeyboardPress", (handle, param1, param2) =>
+            {
+
+                string keyCode = "";
+                try
+                {
+                    keyCode = (string)param1;
+                }
+                catch (Exception e1)
+                {
+                    try
+                    {
+                        keyCode = (string)param2;
+                    }
+                    catch (Exception e2) { }
+                }
+
+                Console.WriteLine("Keyboard Press " + keyCode);
+                HookActions.KeyboardPress(handle, keyCode);
+                return true;
+            });
+
 
             actionsFunction.Add("hideAllWindows", (handle, param1, param2) =>
             {
@@ -116,11 +182,8 @@ namespace AffdexMe
                     catch (Exception e2) { }
                 }
 
-                if (param != "")
-                {
-                    Console.WriteLine("Opening {0}", param);
-                    HookActions.OpenApplication(param);
-                }
+                Console.WriteLine("Opening {0}", param);
+                HookActions.OpenApplication(param);
                 return true;
             });
 
@@ -148,7 +211,7 @@ namespace AffdexMe
                     notificationManager.Show(new NotificationContent
                     {
                         Title = "Screenshot Saved",
-                        Message = "Stored in " + filename,
+                        Message = "Stored in " + folderPath+filename,
                         Type = NotificationType.Information
                     });
                 }

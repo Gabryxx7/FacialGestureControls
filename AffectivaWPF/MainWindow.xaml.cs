@@ -99,6 +99,7 @@ namespace AffdexMe
                 ActionsPanel.Children.Add(feature.actionControl);
                 Grid.SetRow(ActionsPanel.Children[ActionsPanel.Children.Count - 1], ActionsPanel.RowDefinitions.Count - 1);
                 Grid.SetColumn(ActionsPanel.Children[ActionsPanel.Children.Count - 1], ActionsPanel.ColumnDefinitions.Count - 1);
+
             }
 
             this.ContentRendered += MainWindow_ContentRendered;

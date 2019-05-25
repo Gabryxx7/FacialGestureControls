@@ -30,7 +30,21 @@
                  Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}" Background="White"/>
         <TextBox Name="ActivationTime" Text="2" Grid.Row="0" Grid.Column="2"  Background="Transparent"   />
         <ComboBox Name="FeatureActionBox"  Grid.Row="0" Grid.Column="3"  />
-        <TextBox Name="Param1"  Grid.Row="0" Grid.Column="4"  />
+        <Grid Grid.Row="0" Grid.Column="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBox Name="Param1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"  Visibility="Visible" />
+            <ComboBox Name="Param1ComboBox" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"  Visibility="Hidden" />
+            <Button Name="FolderSelector" Content="..." Grid.Row="0" Grid.Column="3"  Grid.ColumnSpan="1" Visibility="Hidden" />
+        </Grid>
+
         <TextBox Name="Param2"  Grid.Row="0" Grid.Column="5"  />
     </Grid>
 </UserControl>

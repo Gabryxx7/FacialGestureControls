@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -18,7 +19,7 @@ namespace AffdexMe
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class ActionSelector : UserControl
+    public partial class ActionSelector : System.Windows.Controls.UserControl
     {
         public AffectivaFeature feature;
         public ActionSelector()
@@ -43,10 +44,27 @@ namespace AffdexMe
                 FeatureActionBox.SelectedItem = feature.ActionName;
 
             FeatureActionBox.SelectionChanged += FeatureActionBox_SelectedChanged;
+            Param1ComboBox.SelectionChanged += Param1ComboBox_SelectedChanged;
             ThresholdValue.LostFocus += ThresholdValue_LostFocus;
             ActivationTime.LostFocus += ActivationTime_LostFocus;
             Param1.LostFocus += Param1_LostFocus;
             Param2.LostFocus += Param2_LostFocus;
+            FolderSelector.Click += FolderSelector_Click;
+            SwitchParam1Box(feature);
+            if(feature.ActionName.Trim() != "")
+                FeatureActionBox.SelectedItem = feature.ActionName;
+        }
+
+        public void FolderSelector_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new System.Windows.Forms.FolderBrowserDialog())
+            {
+                System.Windows.Forms.DialogResult result = dialog.ShowDialog();
+                if (result == DialogResult.OK)
+                {
+                    Param1.Text = dialog.SelectedPath;
+                }
+            }
         }
 
         public void Param1_LostFocus(object sender, EventArgs e)
@@ -71,7 +89,44 @@ namespace AffdexMe
 
         public void FeatureActionBox_SelectedChanged(object sender, SelectionChangedEventArgs e)
         {
-            feature.ActionName = (String) FeatureActionBox.SelectedItem;
+            feature.ActionName = (String)FeatureActionBox.SelectedItem;
+            SwitchParam1Box(feature);
+        }
+
+        public void Param1ComboBox_SelectedChanged(object sender, SelectionChangedEventArgs e)
+        {
+            feature.param1 = (String)Param1ComboBox.SelectedItem;
+        }
+
+        public void SwitchParam1Box(AffectivaFeature feature)
+        {
+            if (feature.ActionName.ToLower().Contains("keyboard"))
+            {
+                Param1.Visibility = Visibility.Hidden;
+                FolderSelector.Visibility = Visibility.Hidden;
+                Param1ComboBox.Items.Add("");
+                foreach (String key in Keyboard.ScanCodeShort.Keys)
+                {
+                    Param1ComboBox.Items.Add(key);
+                }
+                Param1ComboBox.Visibility = Visibility.Visible;
+            }
+            else if (feature.ActionName.ToLower().Contains("screenshot"))
+            {
+                Param1.Visibility = Visibility.Visible;
+                FolderSelector.Visibility = Visibility.Visible;
+                Param1ComboBox.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                Param1.Visibility = Visibility.Visible;
+                FolderSelector.Visibility = Visibility.Hidden;
+                Param1ComboBox.Visibility = Visibility.Hidden;
+            }
+
+
+            if (((string)feature.param1).Trim() != "")
+                Param1ComboBox.SelectedItem = (((string)feature.param1).Trim());
         }
     }
 }
