@@ -128,6 +128,11 @@ namespace AffdexMe
             SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_DOWN);
         }
 
+        public static void MuteSystemVolume(IntPtr handle)
+        {
+            SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_VOLUME_MUTE);
+        }
+
         public static void SystemMediaStop(IntPtr handle)
         {
             SendMessage(handle, WMCommand.WM_APPCOMMAND, handle, (IntPtr)AppCommand.APPCOMMAND_MEDIA_STOP);

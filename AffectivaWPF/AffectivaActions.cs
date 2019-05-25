@@ -106,6 +106,14 @@ namespace AffdexMe
                 return true;
             });
 
+
+            actionsFunction.Add("VolumeMute", (handle, param1, param2) =>
+            {
+                Console.WriteLine("VOLUME MUTE");
+                HookActions.MuteSystemVolume(handle);
+                return true;
+            });
+
             actionsFunction.Add("MediaPlay", (handle, param1, param2) =>
             {
                 Console.WriteLine("MEDIA PLAY");
