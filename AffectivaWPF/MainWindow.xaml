@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:affdexMe="clr-namespace:AffdexMe;assembly="
-        Title="AffdexMe" 
+        Title="Expresso" 
         Height="720" Width="1594"
         MinHeight="640" MinWidth="480"
         MaxHeight="720" MaxWidth="1594"
@@ -157,9 +157,7 @@
             <StackPanel Name="stackPanelImage" Orientation="Vertical" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Grid Name="gridAffdexFaceDisplay" >
                     <Image Name="cameraDisplay" Visibility="Hidden" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="UniformToFill"/>
-
-                    <Image Name="logoBackground" Margin="40,40,40,85" Width="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                            Height="auto" Source="Resources\AffectivaLogo1.png" Visibility="Visible"/>
+                    <Label Name="logoBackground" Content="Loading Camera Feed..." VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#FF321616" FontSize="24" Margin="359,290,338,-290"/>
 
                     <affdexMe:DrawingCanvas x:Name="canvas" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     <Label Name="appShotLocLabel" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource appShotLocLabelStyle}" />

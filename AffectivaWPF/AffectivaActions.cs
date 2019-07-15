@@ -92,16 +92,16 @@ namespace AffdexMe
                 return true;
             });
 
-            actionsFunction.Add("VolumeDown", (handle, param1, param2) =>
+            actionsFunction.Add("VolumeUp", (handle, param1, param2) =>
             {
-                Console.WriteLine("VOLUME DOWN");
+                Console.WriteLine("VOLUME UP");
                 HookActions.IncreaseSystemVolume(handle);
                 return true;
             });
 
-            actionsFunction.Add("VolumeUp", (handle, param1, param2) =>
+            actionsFunction.Add("VolumeDown", (handle, param1, param2) =>
             {
-                Console.WriteLine("VOLUME UP");
+                Console.WriteLine("VOLUME DOWN");
                 HookActions.DecreaseSystemVolume(handle);
                 return true;
             });
