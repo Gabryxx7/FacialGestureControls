@@ -330,7 +330,7 @@ namespace AffdexMe
         {
             try
             {
-                using (var reader = new StreamReader("data.csv"))
+                using (var reader = new StreamReader("actionData.csv"))
                 using (var csv = new CsvHelper.CsvReader(reader))
                 {
                     csv.Read();

@@ -113,6 +113,9 @@
     <Compile Include="ActionSelector.xaml.cs">
       <DependentUpon>ActionSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SelectVideoSource.xaml.cs">
+      <DependentUpon>SelectVideoSource.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WMCommand.cs" />
     <Page Include="$(ProjectDir)MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -134,6 +137,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="ActionSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectVideoSource.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

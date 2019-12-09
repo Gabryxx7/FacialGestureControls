@@ -22,8 +22,31 @@ namespace AffdexMe
     {
         public AffectivaActions actions;
         public IntPtr handle;
-        public MainWindow()
+        private int filenameIndex = 0;
+        private String[] filenames = null;
+        private String filename = null;
+        private String filenameNoExt;
+        StreamWriter writer;
+        CsvHelper.CsvWriter csv;
+
+        private float process_last_timestamp = -1.0f;
+        private float process_fps = -1.0f;
+
+        const int cameraId = 0;
+        const int numberOfFaces = 1;
+        const int cameraFPS = 30;
+        const int processFPS = 30;
+        const Affdex.FaceDetectorMode faceConfig = Affdex.FaceDetectorMode.LARGE_FACES;
+
+        public MainWindow(String[] filenames)
         {
+            if (filenames != null && filenames.Length > 0)
+            {
+                this.filenames = filenames;
+                filenameIndex = 0;
+                this.filename = filenames[filenameIndex];
+                this.filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this.filename);
+            }
             InitializeComponent();
             CenterWindowOnScreen();
             ColumnDefinitionCollection test = new ActionSelector().ActionSelectorGrid.ColumnDefinitions;
@@ -115,7 +138,7 @@ namespace AffdexMe
         void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             handle = (new WindowInteropHelper(this)).Handle;
-            StartCameraProcessing();
+            StartProcessing();
         }
 
         /// <summary>
@@ -131,6 +154,14 @@ namespace AffdexMe
             this.Top = (screenHeight / 2) - (windowHeight / 2);
         }
 
+        public void updateTitle()
+        {
+            if(this.filename != null)
+                this.Title = "Video " + (this.filenameIndex + 1) + "/" + this.filenames.Length + " : " + this.filenameNoExt + " - FPS: " + process_fps;
+            else
+                this.Title = "Expresso - FPS: " + process_fps;
+         }
+
 
         /// <summary>
         /// Handles the Image results event produced by Affdex.Detector
@@ -139,16 +170,27 @@ namespace AffdexMe
         /// <param name="image">The <see cref="Affdex.Frame"/> instance containing the image analyzed.</param>
         public void onImageResults(Dictionary<int, Affdex.Face> faces, Affdex.Frame image)
         {
+            process_fps = 1.0f / (image.getTimestamp() - process_last_timestamp);
+            process_last_timestamp = image.getTimestamp();
+            System.Console.WriteLine(" pfps: {0}", process_fps.ToString());
             String name = null;
             PropertyInfo prop = null;
             float value = -1;
+            this.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                updateTitle();
+            }));
             //foreach (KeyValuePair<int, Affdex.Face> pair in faces)
-            if(faces.Count > 0)
+            if (faces.Count > 0)
             {
                 // Affdex.Face face = pair.Value; //Thi is for all the faces
                 Affdex.Face face = faces[faces.Keys.Min()]; //Select only the first face (with smallest ID)
                 var featurePoints = face.FeaturePoints;
-                foreach(AffectivaFeature feature in actions.featuresActions)
+                if (this.csv != null)
+                {
+                    this.csv.WriteField(image.getTimestamp());
+                }
+                foreach (AffectivaFeature feature in actions.featuresActions)
                 {
                     name = feature.AffectivaName;
 
@@ -195,8 +237,8 @@ namespace AffdexMe
                         feature.currentValue = value;
                         AffectivaFeature localFeature = feature;
                         this.Dispatcher.BeginInvoke(new Action<AffectivaFeature>(updateActionSelector), new object[] { localFeature });
-                       
-                        if (value >= feature.threshold)
+
+                        if (filename == null && value >= feature.threshold)
                         {
                             if (feature.timer.Elapsed.TotalSeconds >= feature.activationTime)
                             {
@@ -204,13 +246,28 @@ namespace AffdexMe
                                 if (actions.actionsFunction.ContainsKey(feature.ActionName))
                                     actions.actionsFunction[feature.ActionName].Invoke(handle, feature.param1, feature.param2);
                             }
-                           
+
                         }
                         else
                         {
                             feature.timer.Restart();
                         }
                     }
+
+
+                    if (this.csv != null)
+                    {
+                        if(value < 0)
+                            this.csv.WriteField(0);
+                        else
+                            this.csv.WriteField(value);
+                    }
+                }
+
+                if (this.csv != null)
+                {
+                    this.csv.NextRecord();
+                    this.csv.Flush();
                 }
             }
             DrawData(image, faces);
@@ -219,6 +276,9 @@ namespace AffdexMe
         public void updateActionSelector(AffectivaFeature feature)
         {
             feature.actionControl.ActualValue.Value = feature.currentValue;
+            if(this.filename != null)
+                feature.actionControl.ThresholdValue.Text = ""+feature.currentValue;
+
             if (feature.activationTime > 0)
             {
                 float val = 100 * ((float)feature.timer.Elapsed.TotalMilliseconds / (feature.activationTime * 1000));
@@ -249,7 +309,31 @@ namespace AffdexMe
         /// <summary>
         /// Handles the end of processing event; not used
         /// </summary>
-        public void onProcessingFinished(){}
+        public void onProcessingFinished(){
+            Console.WriteLine("Processing Finished " + (this.filenameIndex+1) + "/" +this.filenames.Length);
+            if(csv != null){
+                this.writer.Close();
+            }
+
+            if(filenameIndex < this.filenames.Length-1)
+            {
+                filenameIndex++;
+                this.filename = filenames[filenameIndex];
+                this.filenameNoExt = System.IO.Path.GetFileNameWithoutExtension(this.filename);
+
+                this.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    StartProcessing();
+                }));
+            }
+            else
+            {
+                this.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    StopProcessing();
+                }));
+            }
+        }
 
 
         /// <summary>
@@ -264,7 +348,7 @@ namespace AffdexMe
                                                         MessageBoxImage.Error);
             this.Dispatcher.BeginInvoke((Action)(() =>
             {
-                StopCameraProcessing();
+                StopProcessing();
                 ResetDisplayArea();
             }));
         }
@@ -427,10 +511,16 @@ namespace AffdexMe
         }
 
         /// <summary>
-        /// Starts the camera processing.
+        /// Starts the camera/video processing.
         /// </summary>
-        private void StartCameraProcessing()
+        private void StartProcessing()
         {
+            if (this.filename != null)
+            {
+                Console.WriteLine("Starting processing " + (this.filenameIndex + 1) + "/" + this.filenames.Length);
+                this.Title = "Video " + (this.filenameIndex + 1) + "/" + this.filenames.Length +" : " +this.filenameNoExt;
+                initializeCSV();
+            }
             try
             {
                 btnStartCamera.IsEnabled = false;
@@ -444,11 +534,18 @@ namespace AffdexMe
                 btnExit.IsEnabled = true;
 
                 // Instantiate CameraDetector using default camera ID
-                const int cameraId = 0;
-                const int numberOfFaces = 10;
-                const int cameraFPS = 15;
-                const int processFPS = 15;
-                Detector = new Affdex.CameraDetector(cameraId, cameraFPS, processFPS, numberOfFaces, Affdex.FaceDetectorMode.LARGE_FACES);
+                if(Detector != null)
+                {
+                    Detector.stop();
+                }
+                if (this.filename == null)
+                {
+                    Detector = new Affdex.CameraDetector(cameraId, cameraFPS, processFPS, numberOfFaces, faceConfig);
+                }
+                else
+                {
+                    Detector = new Affdex.VideoDetector(processFPS, numberOfFaces, faceConfig);
+                }
 
                 //Set location of the classifier data files, needed by the SDK
                 Detector.setClassifierPath(FilePath.GetClassifierDataFolder());
@@ -460,6 +557,11 @@ namespace AffdexMe
                 Detector.setProcessStatusListener(this);
 
                 Detector.start();
+
+                if (this.filename != null)
+                {
+                    ((Affdex.VideoDetector) Detector).process(this.filename);
+                }
 
                 // Hide the logo, show the camera feed and the data canvas
                 logoBackground.Visibility = Visibility.Hidden;
@@ -477,7 +579,7 @@ namespace AffdexMe
                                                                 "AffdexMe Error",
                                                                 MessageBoxButton.OK,
                                                                 MessageBoxImage.Error);
-                        StopCameraProcessing();
+                        StopProcessing();
                         return;
                     }
                 }
@@ -511,10 +613,15 @@ namespace AffdexMe
         /// <summary>
         /// Stops the camera processing.
         /// </summary>
-        private void StopCameraProcessing()
+        private void StopProcessing()
         {
             try
             {
+                if(this.filename != null)
+                {
+                    this.Title = "FINISHED!";
+                    Application.Current.Shutdown();
+                }
                 if ((Detector != null) && (Detector.isRunning()))
                 {
                     Detector.stop();
@@ -681,7 +788,7 @@ namespace AffdexMe
         {
             try
             {
-                StartCameraProcessing();
+                StartProcessing();
             }
             catch (Exception ex)
             {
@@ -697,7 +804,7 @@ namespace AffdexMe
         /// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
         private void btnStopCamera_Click(object sender, RoutedEventArgs e)
         {
-            StopCameraProcessing();
+            StopProcessing();
             ResetDisplayArea();
         }
 
@@ -719,7 +826,7 @@ namespace AffdexMe
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            StopCameraProcessing();
+            StopProcessing();
             SaveSettings();
             Application.Current.Shutdown();
         }
@@ -734,7 +841,7 @@ namespace AffdexMe
             Boolean wasRunning = false;
             if ((Detector != null) && (Detector.isRunning()))
             {
-                StopCameraProcessing();
+                StopProcessing();
                 ResetDisplayArea();
                 wasRunning = true;
             }
@@ -749,7 +856,28 @@ namespace AffdexMe
             canvas.MetricNames = EnabledClassifiers;
             if (wasRunning)
             {
-                StartCameraProcessing();
+                StartProcessing();
+            }
+        }
+
+
+        public void initializeCSV()
+        {
+            try
+            {
+                this.writer = new StreamWriter(this.filenameNoExt+"_data.csv");
+                this.csv = new CsvHelper.CsvWriter(this.writer);
+                csv.WriteField("timestamp");
+                foreach (AffectivaFeature feature in actions.featuresActions)
+                {
+                    csv.WriteField(feature.AffectivaName);
+                }
+                csv.NextRecord();
+                csv.Flush();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("CANNOT WRITE FILE: " + e.Message);
             }
         }
 

@@ -69,7 +69,7 @@ namespace AffdexMe
             base.OnStartup(e);
 
             // Create and show the application's main window
-            MainWindow window = new MainWindow();
+            SelectVideoSource window = new SelectVideoSource();
             window.Show();
         }
 
