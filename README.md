@@ -1,15 +1,20 @@
-# Expresso - Windows control with Facial gestures
+# Expresso - Windows control with facial gestures
+***Disclaimer**: I made this project more than 1 year ago and since then I haven't really touched it. I will tr to update this Readme to include more info about the project*
+
 This is a little fun project developed as a final assignment for the course [INFO90003 - Designing Novel Interaction](https://handbook.unimelb.edu.au/2018/subjects/info90003)
 at the University of Melbourne.
 
-The project uses [Affectiva](https://www.affectiva.com/) to detect facial expressions and emojis in real time. The app has been recently updated to get video feed from file and process
-every frame in it.
+The project uses [Affectiva](https://www.affectiva.com/) to detect facial expressions and emojis in real time. The app has been recently updated to get video feed from file and process every frame in it.
 
-# Instructions
+
+# How to use it
 There should be a release in the repository but if there is not, you'll find the pre-compiled exe in the `AffectivaWPF/bin/x64/Release` folder.
 
 Once started you should be greeted with this window:
+
+
 ![Start](Start.png)
+
 
 ## Camera Feed
 The camera feed should look something like this:
@@ -19,11 +24,9 @@ The camera feed should look something like this:
 # Features and facial expressions
 There are three categories of expressions:
 
-| Seven Basic Emotions                              | Action Units                                                                                                                                                                                                                                                                                                                        | Other              |   |   |
-|---------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------|---|---|
-| Contempt Surprise Anger, Sadness Disgust Fear Joy | Scream Flushed Stuck Out Tongue Wink Smirk Rage Disappointed Kissing Laughing Smiley Relaxed Brow Raise Brow Furrow Nose Wrinkle Upper Lip Raise Lip Corner Depress Chin Raise Lip Pucker Lip Press Lip Suck Mouth Open Eye Closure Eye Widen Cheek Raise Lid Tighten Dimpler Lip Stretch Jaw Drop Inner Brow Raise Smile Attention | Engagement Valence |   |   |
-|                                                   |                                                                                                                                                                                                                                                                                                                                     |                    |   |   |
-|                                                   |                                                                                                                                                                                                                                                                                                                                     |                    |   |   |
+| Seven Basic Emotions                                               | Action Units                                                                                                                                                                                                                                                                                                                                                                                                                  | Other                 |
+|--------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------|
+| Contempt<br>Surprise<br>Anger<br>Sadness<br>Disgust<br>Fear<br>Joy | Scream<br>Flushed<br>Stuck Out Tongue<br>Wink<br>Smirk<br>Rage<br>Disappointed<br>Kissing<br>Laughing<br>Smiley<br>Relaxed<br>Brow Raise<br>Brow Furrow<br>Nose Wrinkle<br>Upper Lip Raise<br>Lip Corner Depress<br>Chin Raise<br>Lip Pucker<br>Lip Press<br>Lip Suck<br>Mouth Open<br>Eye Closure<br>Eye Widen<br>Cheek Raise<br>Lid Tighten<br>Dimpler<br>Lip Stretch<br>Jaw Drop<br>Inner Brow Raise<br>Smile<br>Attention | Engagement<br>Valence |
 
 There are currently 14 actions registered in the app, implemented with the help of Windows Hooks in .NET and the `user32.dll` library.
 I tried to keep the code modular so that new actions could be hooked up easily. The class `AffectivaActions` is where these actions are added to the list:
@@ -72,5 +75,6 @@ featuresActions.Add(new AffectivaFeature(AffectivaFeature.FeatureType.Emoji,"win
 ![Screenshot](Screenshot1.jpg)
 
 # YouTube Presentation
+[Youtube Link](https://www.youtube.com/watch?v=fw9QCx4QEHs)
 [![Video](https://img.youtube.com/vi/fw9QCx4QEHs/0.jpg)](https://www.youtube.com/watch?v=fw9QCx4QEHs)
 
