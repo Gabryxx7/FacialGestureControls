@@ -7,7 +7,7 @@ every frame in it.
 
 # Screenshot 
 
-![Screenshot](screenshot1.png)
+![Screenshot](screenshot1.jpg)
 
 # YouTube Presentation
 [![Video](https://img.youtube.com/vi/fw9QCx4QEHs/0.jpg)](https://www.youtube.com/watch?v=fw9QCx4QEHs)
